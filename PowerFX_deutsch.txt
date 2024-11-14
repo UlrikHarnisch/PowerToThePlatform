@@ -28,30 +28,32 @@ LookUp(
 
 ## Save-Button:
 
-If(
-    IsBlank(
-        LookUp(
+With(
+    {
+        _lookup: LookUp(
             Commenting;
             Jahr = First(PowerBIIntegration.Data).Jahr && Kommune = First(PowerBIIntegration.Data).Kommune
         )
-    );
-    Patch(
-        Commenting;
-        {Jahr: First(PowerBIIntegration.Data).Jahr;
-        Kommune: First(PowerBIIntegration.Data).Kommune;
-        Titel: TextInput1.Text
-        }
-    );
-    Patch(
-        Commenting;
-        LookUp(
+    };
+    If(
+        IsBlank(_lookup);
+        Patch(
             Commenting;
-            Jahr = First(PowerBIIntegration.Data).Jahr && Kommune = First(PowerBIIntegration.Data).Kommune
+            {
+                Jahr: First(PowerBIIntegration.Data).Jahr;
+                Kommune: First(PowerBIIntegration.Data).Kommune;
+                Titel: TextInput1.Text
+            }
         );
-        {Jahr: First(PowerBIIntegration.Data).Jahr;
-        Kommune: First(PowerBIIntegration.Data).Kommune;
-        Titel: TextInput1.Text
-        }
+        Patch(
+            Commenting;
+            _lookup;
+            {
+                Jahr: First(PowerBIIntegration.Data).Jahr;
+                Kommune: First(PowerBIIntegration.Data).Kommune;
+                Titel: TextInput1.Text
+            }
+        )
     )
 );;
 Back()
