@@ -1,0 +1,65 @@
+## Button:
+
+If(
+    CountRows([@PowerBIIntegration].Data) > 1, false , true)
+
+
+
+
+## Text:
+
+If(
+    CountRows([@PowerBIIntegration].Data) > 1, true , false)
+
+
+
+
+## Edit:
+
+Gallery auf PBIIntegration.Data
+Comment-Feld: Eingabefeld
+LookUp(
+    Commenting,
+    Jahr = First([@PowerBIIntegration].Data).Jahr && Kommune = First([@PowerBIIntegration].Data).Kommune,
+    Titel)
+
+
+
+
+## Save-Button:
+
+If(
+    IsBlank(
+        LookUp(
+            Commenting,
+            Jahr = First(PowerBIIntegration.Data).Jahr && Kommune = First(PowerBIIntegration.Data).Kommune
+        )
+    ),
+    Patch(
+        Commenting,
+        {Jahr: First(PowerBIIntegration.Data).Jahr,
+        Kommune: First(PowerBIIntegration.Data).Kommune,
+        Titel: TextInput1.Text
+        }
+    ),
+    Patch(
+        Commenting,
+        LookUp(
+            Commenting,
+            Jahr = First(PowerBIIntegration.Data).Jahr && Kommune = First(PowerBIIntegration.Data).Kommune
+        ),
+        {Jahr: First(PowerBIIntegration.Data).Jahr,
+        Kommune: First(PowerBIIntegration.Data).Kommune,
+        Titel: TextInput1.Text
+        }
+    )
+);
+Back()
+
+
+
+
+## Back-Button:
+
+ResetForm(Form1);
+Back()
